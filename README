@@ -1,0 +1,12 @@
+You need the following installed:
+
+build-essential fakeroot debhelper
+
+To build package:
+
+fakeroot debian/rules clean binary
+
+To increment version:
+
+Add an entry to debian/changelog and increment the version
+
