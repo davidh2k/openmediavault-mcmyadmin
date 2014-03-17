@@ -1,0 +1,34 @@
+#!/bin/bash
+
+### BEGIN INIT INFO
+# Provides:          McMyAdmin
+# Required-Start:
+# Required-Stop:
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Start daemon at boot time
+# Description:       Enable service provided by daemon.
+### END INIT INFO
+
+logfile="/var/log/McMyAdmin_start.log"
+user="mcmyadmin"
+
+case "$1" in
+  start)
+    echo "Starting McMyAdmin"
+    su $user -c 'cd /home/mcmyadmin/McMyAdmin && screen -dmS McMyAdmin ./MCMA2_Linux_x86_64' >>$logfile
+    echo "Done"
+    ;;
+  stop)
+    echo "Stopping McMyAdmin..."
+    screen -p 0 -S McMyAdmin -X stuff "/quit $(printf '\r')"
+    echo "Stopped McMyAdmin!"
+    ;;
+  *)
+    echo "Usage: /etc/init.d/McMyAdmin {start|stop}"
+    exit 1
+    ;;
+esac
+
+exit 0
+

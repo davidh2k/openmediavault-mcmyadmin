@@ -1,0 +1,9 @@
+Package: openmediavault-mcmyadmin
+Version: 0.5.2
+Architecture: all
+Maintainer: David Hönel <plugins@omv-extras.org>
+Installed-Size: 41524
+Depends: debconf (>= 0.5) | debconf-2.0, screen
+Section: misc
+Priority: optional
+Description: McMyAdmin for OpenMediaVault

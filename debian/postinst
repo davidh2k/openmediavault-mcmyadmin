@@ -8,7 +8,7 @@ set -e
 case "$1" in
     configure)
         useradd -m -p paxPtk/EBFGAg mcmyadmin
-        chown mcmyadmin:mcmyadin -R /home/mcmyadmin/McMyAdmin
+        chown mcmyadmin:mcmyadmin -R /home/mcmyadmin/McMyAdmin
 
         update-rc.d mcmyadmin defaults
 
