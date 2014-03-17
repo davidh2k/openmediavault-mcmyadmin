@@ -1,0 +1,11 @@
+Source: openmediavault-mcmyadmin
+Section: misc
+Priority: optional
+Maintainer: David Hönel <plugins@omv-extras.org>
+Build-Depends: debhelper (>= 8 )
+Standards-Version: 3.9.3
+
+Package: openmediavault-mcmyadmin
+Architecture: all
+Depends: screen
+Description: McMyAdmin for OpenMediaVault
