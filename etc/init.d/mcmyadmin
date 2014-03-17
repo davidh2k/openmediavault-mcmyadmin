@@ -30,9 +30,9 @@ mc_start() {
       --pidfile /var/run/minecraft.pid \
       --background \
       --user $USER \
-      --name mcmyadmin \
+      --name minecraft \
       --chdir /home/mcmyadmin/McMyAdmin \
-      --exec /usr/bin/screen -- -D -m -S mcmyadmin ./MCMA2_Linux_x86_64
+      --exec /usr/bin/screen -- -D -m -S minecraft ./MCMA2_Linux_x86_64
 
   echo "I'm optimistic that McMyAdmin might be running now."
 }
@@ -40,7 +40,7 @@ mc_start() {
 mc_stop() {
   echo "Stopping McMyAdmin Minecraft Control Panel"
 
-  screen -p 0 -S mcmyadmin -X eval 'stuff /quit\015'
+  screen -p 0 -S minecraft -X eval 'stuff /quit\015'
   sync
   sleep 3
 

@@ -7,12 +7,18 @@ set -e
 
 case "$1" in
     configure)
-        useradd -m -p paxPtk/EBFGAg mcmyadmin
+
+        if ! grep -q "^mcmyadmin:" /etc/passwd; then
+            echo "Adding mcmyadmin user..."
+            useradd -m -p paxPtk/EBFGAg mcmyadmin
+        else
+            echo "mcmyadmin user already exists."
+        fi
         chown mcmyadmin:mcmyadmin -R /home/mcmyadmin/McMyAdmin
 
         update-rc.d mcmyadmin defaults
 
-        /etc/init.d/mcmyadmin
+        /etc/init.d/mcmyadmin start
     ;;
 
     abort-upgrade|abort-remove|abort-deconfigure)
