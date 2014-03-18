@@ -1,34 +1,73 @@
 #!/bin/bash
+# Init script for McMyAdmin on Debian Linux
+# Written by Markus Ewald, public domain, use on your own risk.
+#
+# Updated by the OpenMediaVault Plugin Developers to work with the
+# non-Mono version of McMyAdmin
+#
 
 ### BEGIN INIT INFO
-# Provides:          McMyAdmin
-# Required-Start:
-# Required-Stop:
-# Default-Start:     2 3 4 5
-# Default-Stop:      0 1 6
-# Short-Description: Start daemon at boot time
-# Description:       Enable service provided by daemon.
+# Provides:   McMyAdmin
+# Required-Start: $local_fs $remote_fs
+# Required-Stop:  $local_fs $remote_fs
+# Should-Start:   $network
+# Should-Stop:    $network
+# Default-Start:  2 3 4 5
+# Default-Stop:   0 1 6
+# Short-Description:    McMyAdmin Web Panel
+# Description:    Starts the McMyAdmin Minecraft Control Panel
 ### END INIT INFO
 
-logfile="/var/log/McMyAdmin_start.log"
-user="mcmyadmin"
+# Settings
+USER='mcmyadmin'
+
+mc_start() {
+  echo "Starting McMyAdmin/Minecraft server..."
+  env TERM="xterm" \
+    start-stop-daemon \
+      --start \
+      --make-pidfile \
+      --pidfile /var/run/minecraft.pid \
+      --background \
+      --user $USER \
+      --name minecraft \
+      --chdir /home/mcmyadmin/McMyAdmin \
+      --exec /usr/bin/screen -- -D -m -S minecraft ./MCMA2_Linux_x86_64
+
+  echo "I'm optimistic that McMyAdmin might be running now."
+}
+
+mc_stop() {
+  echo "Stopping McMyAdmin Minecraft Control Panel"
+
+  screen -p 0 -S minecraft -X eval 'stuff /quit\015'
+  sync
+  sleep 3
+
+  if [ -e /var/run/minecraft.pid ]; then
+    read PID < /var/run/minecraft.pid
+    if [ -d /var/run/${PID} ]; then
+      echo "Normal shutdown not successfull, forcing..."
+
+      start-stop-daemon \
+        --stop \
+        --signal 15 \
+        --pidfile /var/run/minecraft.pid
+    fi
+  fi
+
+  echo "There's a good chance that McMyAdmin is stopped now."
+}
 
 case "$1" in
   start)
-    echo "Starting McMyAdmin"
-    su $user -c 'cd /home/mcmyadmin/McMyAdmin && screen -dmS McMyAdmin ./MCMA2_Linux_x86_64' >>$logfile
-    echo "Done"
+    mc_start
     ;;
   stop)
-    echo "Stopping McMyAdmin..."
-    screen -p 0 -S McMyAdmin -X stuff "/quit $(printf '\r')"
-    echo "Stopped McMyAdmin!"
+    mc_stop
     ;;
   *)
-    echo "Usage: /etc/init.d/McMyAdmin {start|stop}"
-    exit 1
+    echo "Usage: /etc/init.d/minecraft {start|stop}"
+    echo "       ...and hope that it works!"
     ;;
 esac
-
-exit 0
-
